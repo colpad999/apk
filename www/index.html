@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html lang="id">
+    <head>
+        <meta charset="utf-8">
+        <!-- IMPORTANT: Android-specific CSP -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        
+        <!-- Android Viewport Fix -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
+        
+        <!-- Android Status Bar Styling -->
+        <meta name="theme-color" content="#0a0f1c">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        
+        <link rel="stylesheet" href="css/index.css">
+        <title>Productive.exe</title>
+        
+        <!-- Android Splash Screen (Optional) -->
+        <link rel="stylesheet" href="css/splash.css">
+    </head>
+    <body>
+        <!-- Splash Screen for Android -->
+        <div id="splash" class="splash-screen">
+            <div class="splash-content">
+                <div class="splash-logo">P</div>
+                <div class="splash-title">Productive.exe</div>
+                <div class="splash-loading">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Background Elements -->
+        <div class="grid-bg"></div>
+        
+        <!-- Visualization Container -->
+        <div class="visualization-container" id="visualizationContainer"></div>
+
+        <!-- Login Screen -->
+        <div class="login-screen" id="loginScreen">
+            <div class="login-container">
+                <div class="login-header">
+                    <div class="login-logo">P</div>
+                    <h1 class="login-title">Productive</h1>
+                    <p class="login-subtitle">By Colpad</p>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">USERNAME</label>
+                    <input type="text" class="form-input" id="loginUsername" placeholder="Enter your name" maxlength="20">
+                </div>
+                
+                <div class="form-group" style="text-align: center;">
+                    <button class="btn btn-primary btn-full" id="loginBtn">
+                        <span>🚀</span>
+                        <span>START JOURNEY</span>
+                    </button>
+                    <p style="margin-top: var(--space-lg); font-size: 12px; color: var(--text-tertiary);">
+                        Your productivity journey starts here
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main App Container -->
+        <div class="app-container" id="appContainer">
+            <!-- Header -->
+            <header class="app-header" id="appHeader">
+                <div class="header-content">
+                    <div class="logo-section" id="logoSection">
+                        <div class="app-logo">P</div>
+                        <div>
+                            <h1 class="mono" style="font-size: 18px; color: var(--accent-cyan);">Productive</h1>
+                            <p class="mono" id="currentDate" style="font-size: 11px; margin-top: 2px; opacity: 0.7;">SYSTEM ACTIVE</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: var(--space-md);">
+                        <div class="system-status mono">
+                            <div class="status-dot"></div>
+                            <span id="systemStatus">PRODUCTIVE</span>
+                        </div>
+                        <div class="user-profile" id="userProfile">
+                            <div class="user-avatar" id="userAvatar">U</div>
+                            <div class="user-name" id="userName">User</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <div class="content-area" id="contentArea">
+                <div class="dashboard">
+                    <!-- Streak Hero Section -->
+                    <div class="streak-hero">
+                        <div class="streak-badge mono">
+                            <span>🔥</span>
+                            <span>PRODUCTIVITY STREAK</span>
+                        </div>
+                        <div class="streak-count" id="streakCount">0</div>
+                        <div class="streak-label" id="streakLabel">CONSECUTIVE DAYS</div>
+                    </div>
+
+                    <!-- Progress Visualization -->
+                    <div class="progress-visualization">
+                        <svg class="progress-ring-svg" viewBox="0 0 100 100">
+                            <defs>
+                                <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="var(--accent-cyan)" />
+                                    <stop offset="50%" stop-color="var(--accent-blue)" />
+                                    <stop offset="100%" stop-color="var(--accent-purple)" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="progress-ring-bg" cx="50" cy="50" r="45"></circle>
+                            <circle class="progress-ring-fill" cx="50" cy="50" r="45"></circle>
+                        </svg>
+                        
+                        <div class="progress-orbits">
+                            <div class="orbit orbit-1"></div>
+                            <div class="orbit orbit-2"></div>
+                            <div class="orbit orbit-3"></div>
+                            <div class="orbiting-dot"></div>
+                        </div>
+                        
+                        <div class="progress-content">
+                            <div class="progress-number" id="progressNumber">0%</div>
+                            <div class="progress-label">TODAY'S PROGRESS</div>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="metrics-grid">
+                        <div class="metric-card metric-focus">
+                            <div class="metric-icon">🎯</div>
+                            <div class="metric-value" id="focusMetric">0%</div>
+                            <div class="metric-label">FOCUS LEVEL</div>
+                        </div>
+                        <div class="metric-card metric-discipline">
+                            <div class="metric-icon">⚡</div>
+                            <div class="metric-value" id="disciplineMetric">0%</div>
+                            <div class="metric-label">DISCIPLINE</div>
+                        </div>
+                        <div class="metric-card metric-consistency">
+                            <div class="metric-icon">📈</div>
+                            <div class="metric-value" id="consistencyMetric">0%</div>
+                            <div class="metric-label">CONSISTENCY</div>
+                        </div>
+                    </div>
+
+                    <!-- Focus Mode Section -->
+                    <div class="focus-mode-section">
+                        <div class="focus-header">
+                            <h2 class="focus-title mono">
+                                <span>🧠</span>
+                                <span>FOCUS MODE</span>
+                            </h2>
+                            <div class="focus-stats">
+                                <div class="focus-stat">
+                                    <div class="focus-value" id="focusSessions">0</div>
+                                    <div class="focus-label">SESSIONS</div>
+                                </div>
+                                <div class="focus-stat">
+                                    <div class="focus-value" id="focusTime">0</div>
+                                    <div class="focus-label">MINUTES</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="focus-timer">
+                            <div class="timer-display" id="timerDisplay">25:00</div>
+                            <div class="timer-controls">
+                                <button class="btn btn-secondary" id="startTimerBtn">START</button>
+                                <button class="btn btn-secondary" id="pauseTimerBtn">PAUSE</button>
+                                <button class="btn btn-secondary" id="resetTimerBtn">RESET</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Habits Section -->
+                    <div class="habits-section">
+                        <div class="section-header">
+                            <h2 class="section-title mono">
+                                <span>📋</span>
+                                <span>DAILY HABITS</span>
+                            </h2>
+                            <div class="habits-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value" id="completedCount">0</div>
+                                    <div class="stat-label">COMPLETED</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="totalCount">0</div>
+                                    <div class="stat-label">TOTAL</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="streakDays">0</div>
+                                    <div class="stat-label">STREAK</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="habits-list" id="habitsList">
+                            <!-- Habits will be loaded here -->
+                        </div>
+
+                        <button class="add-habit-btn" id="addHabitBtn">
+                            <span class="add-icon">+</span>
+                            <span>ADD NEW HABIT</span>
+                        </button>
+                    </div>
+
+                    <!-- Analytics Section -->
+                    <div class="analytics-section">
+                        <div class="section-header">
+                            <h2 class="section-title mono">
+                                <span>📊</span>
+                                <span>WEEKLY ANALYTICS</span>
+                            </h2>
+                        </div>
+                        <div class="chart-container" id="weeklyChart">
+                            <!-- Chart will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Bar -->
+            <nav class="nav-bar" id="navBar">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <div class="nav-icon">📊</div>
+                    <div class="nav-label">DASHBOARD</div>
+                </a>
+                <a href="#" class="nav-item" data-page="habits">
+                    <div class="nav-icon">📋</div>
+                    <div class="nav-label">HABITS</div>
+                </a>
+                <a href="#" class="nav-item" data-page="analytics">
+                    <div class="nav-icon">📈</div>
+                    <div class="nav-label">ANALYTICS</div>
+                </a>
+                <a href="#" class="nav-item" data-page="profile">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-label">PROFILE</div>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Add/Edit Habit Modal -->
+        <div class="modal-overlay" id="habitModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="modalTitle">ADD NEW HABIT</h2>
+                    <button class="modal-close" id="closeModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">HABIT NAME</label>
+                        <input type="text" class="form-input" id="habitName" placeholder="Tujuan" maxlength="50">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">CATEGORY</label>
+                        <select class="form-input" id="habitCategory">
+                            <option value="health">🏃 Health & Fitness</option>
+                            <option value="work">💼 Work & Career</option>
+                            <option value="study">📚 Learning</option>
+                            <option value="mindfulness">🧘 Mindfulness</option>
+                            <option value="relationships">🤝 Relationships</option>
+                            <option value="finance">💰 Finance</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">DIFFICULTY LEVEL</label>
+                        <div style="display: flex; gap: var(--space-sm);">
+                            <button class="btn btn-secondary" data-difficulty="easy" style="flex: 1;">Easy</button>
+                            <button class="btn btn-secondary" data-difficulty="medium" style="flex: 1;">Medium</button>
+                            <button class="btn btn-secondary" data-difficulty="hard" style="flex: 1;">Hard</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">GOAL FREQUENCY</label>
+                        <select class="form-input" id="habitFrequency">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly (3x)</option>
+                            <option value="weekdays">Weekdays Only</option>
+                            <option value="weekends">Weekends Only</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-full" id="cancelBtn">CANCEL</button>
+                    <button class="btn btn-primary btn-full" id="saveHabitBtn">SAVE HABIT</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Modal -->
+        <div class="modal-overlay" id="profileModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2 class="modal-title">PROFILE & SETTINGS</h2>
+                    <button class="modal-close" id="closeProfileModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-xl);">
+                            <div class="user-avatar" style="width: 60px; height: 60px; font-size: 24px;" id="profileAvatar">U</div>
+                            <div>
+                                <div style="font-size: 24px; font-weight: 700; color: var(--accent-cyan);" id="profileUsername">User</div>
+                                <div style="font-size: 12px; color: var(--text-secondary);">Productivity Level: <span id="productivityLevel">Beginner</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">DAILY GOALS</label>
+                        <div style="display: flex; align-items: center; gap: var(--space-md);">
+                            <input type="range" class="form-input" id="dailyGoalSlider" min="1" max="20" value="5" style="padding: 0; flex: 1;">
+                            <div style="min-width: 60px; text-align: center;">
+                                <div style="font-size: 20px; color: var(--accent-cyan);" id="dailyGoalValue">5</div>
+                                <div style="font-size: 10px; color: var(--text-secondary);">habits/day</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">FOCUS SESSION LENGTH</label>
+                        <div style="display: flex; gap: var(--space-sm);">
+                            <button class="btn btn-secondary" data-minutes="15" style="flex: 1;">15m</button>
+                            <button class="btn btn-secondary active" data-minutes="25" style="flex: 1;">25m</button>
+                            <button class="btn btn-secondary" data-minutes="50" style="flex: 1;">50m</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">NOTIFICATIONS</label>
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: var(--space-md); background: var(--bg-surface); border-radius: var(--radius-lg);">
+                            <span>Daily Reminders</span>
+                            <label style="position: relative; display: inline-block; width: 60px; height: 30px;">
+                                <input type="checkbox" id="notificationsToggle" style="opacity: 0; width: 0; height: 0;">
+                                <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border-color); border-radius: 34px; transition: .4s;">
+                                    <span style="position: absolute; height: 22px; width: 22px; left: 4px; bottom: 4px; background-color: white; border-radius: 50%; transition: .4s;"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">DATA MANAGEMENT</label>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+                            <button class="btn btn-secondary" id="exportDataBtn">
+                                <span>💾</span>
+                                <span>EXPORT DATA</span>
+                            </button>
+                            <button class="btn btn-secondary" id="importDataBtn">
+                                <span>📥</span>
+                                <span>IMPORT DATA</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" id="logoutBtn" style="flex: 1;">LOGOUT</button>
+                    <button class="btn btn-primary" id="saveProfileBtn" style="flex: 2;">SAVE</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Android Back Button Handler -->
+        <div id="androidBackBtn" style="display: none;"></div>
+
+        <script src="cordova.js"></script>
+        <script src="js/index.js"></script>
+    </body>
+</html>
