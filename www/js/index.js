@@ -41,9 +41,15 @@ function onDeviceReady() {
         StatusBar.backgroundColorByHexString("#0a0f1c");
         StatusBar.styleLightContent();
     }
+    
+    // App pause/resume handlers
+    document.addEventListener('pause', onPause, false);
+    document.addEventListener('resume', onResume, false);
 }
 
-// Android back button handler
+// Android back button handler - Improved with double press to exit
+let exitConfirmed = false;
+
 function onBackButton(e) {
     e.preventDefault();
     
@@ -55,10 +61,31 @@ function onBackButton(e) {
     } else if (profileModal.classList.contains('active')) {
         ProductiveSystem.hideAllModals();
     } else {
-        // Exit app on second back press
-        if (confirm("Exit Productive.exe?")) {
+        // Double press to exit with toast notification
+        if (!exitConfirmed) {
+            exitConfirmed = true;
+            ProductiveSystem.showToast('Press BACK again to exit', '');
+            setTimeout(() => { exitConfirmed = false; }, 2000);
+        } else {
             navigator.app.exitApp();
         }
+    }
+}
+
+// Pause handler - clear intervals and save data
+function onPause() {
+    if (window.ProductiveSystem) {
+        window.ProductiveSystem.saveData();
+        if (window.ProductiveSystem.timerInterval) {
+            clearInterval(window.ProductiveSystem.timerInterval);
+        }
+    }
+}
+
+// Resume handler - restore timer state
+function onResume() {
+    if (window.ProductiveSystem) {
+        window.ProductiveSystem.updateDateTime();
     }
 }
 
@@ -114,18 +141,54 @@ class ProductiveSystem {
         // Auto-save every 30 seconds
         setInterval(() => this.saveData(), 30000);
         
-        // Android keyboard handling
+        // Android keyboard handling - Improved
         this.setupAndroidKeyboard();
     }
 
-    // Android keyboard adjustments
+    // ========== ANDROID KEYBOARD HANDLING ==========
     setupAndroidKeyboard() {
-        window.addEventListener('keyboardDidShow', () => {
-            document.body.style.height = 'calc(100vh - 300px)';
+        // Cordova keyboard plugin events
+        window.addEventListener('keyboardWillShow', (e) => {
+            const keyboardHeight = e.keyboardHeight || 300;
+            const activeElement = document.activeElement;
+            
+            if (activeElement && activeElement.tagName.match(/INPUT|TEXTAREA|SELECT/i)) {
+                // Scroll the active element into view
+                setTimeout(() => {
+                    activeElement.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }, 100);
+            }
+            
+            // Add bottom padding to content area to avoid keyboard overlap
+            const contentArea = document.querySelector('.content-area');
+            if (contentArea) {
+                contentArea.style.paddingBottom = `${keyboardHeight + 20}px`;
+            }
         });
-        
-        window.addEventListener('keyboardDidHide', () => {
-            document.body.style.height = '100vh';
+
+        window.addEventListener('keyboardWillHide', () => {
+            const contentArea = document.querySelector('.content-area');
+            if (contentArea) {
+                contentArea.style.paddingBottom = 
+                    `calc(var(--nav-height) + var(--space-lg) + var(--safe-area-bottom))`;
+            }
+        });
+
+        // Fallback for browsers without keyboard plugin
+        window.addEventListener('resize', () => {
+            if (document.activeElement && 
+                document.activeElement.tagName.match(/INPUT|TEXTAREA|SELECT/i)) {
+                // Only adjust if the viewport height shrunk significantly (keyboard open)
+                if (window.innerHeight < 400) {
+                    document.activeElement.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }
+            }
         });
     }
 
@@ -530,7 +593,8 @@ class ProductiveSystem {
         const container = document.getElementById('visualizationContainer');
         container.innerHTML = '';
         
-        for (let i = 0; i < 15; i++) {
+        // Reduced from 15 to 8 for better performance on low-end devices
+        for (let i = 0; i < 8; i++) {
             const element = document.createElement('div');
             element.className = 'floating-element';
             
@@ -656,7 +720,7 @@ class ProductiveSystem {
         
         this.showToast('Time\'s up!', 'Great session! Take a break.');
         
-        // Play notification sound
+        // Play notification sound using Cordova beep
         this.playNotificationSound();
         
         this.saveData();
@@ -675,16 +739,16 @@ class ProductiveSystem {
     }
 
     playNotificationSound() {
-        // Android notification sound
         try {
-            if (navigator.vibrate) {
-                navigator.vibrate(200);
+            // Cordova notification beep
+            if (navigator.notification) {
+                navigator.notification.beep(1);
+            } else if (navigator.vibrate) {
+                // Pattern: 200ms vibration, 100ms pause, 200ms vibration
+                navigator.vibrate([200, 100, 200]);
             }
-            
-            const beep = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAZGF0YQQ=');
-            beep.play();
         } catch (e) {
-            console.log('Sound not supported');
+            console.log('Sound/vibration not supported', e);
         }
     }
 
@@ -1181,16 +1245,20 @@ class ProductiveSystem {
         });
         
         // Better touch feedback
-        document.querySelectorAll('.btn, .nav-item, .habit-item, .user-profile').forEach(el => {
+        document.querySelectorAll('.btn, .nav-item, .habit-item, .user-profile, .modal-close').forEach(el => {
             el.addEventListener('touchstart', () => {
                 el.classList.add('touch-active');
-            });
+            }, { passive: true });
             
             el.addEventListener('touchend', () => {
                 setTimeout(() => {
                     el.classList.remove('touch-active');
                 }, 150);
-            });
+            }, { passive: true });
+            
+            el.addEventListener('touchcancel', () => {
+                el.classList.remove('touch-active');
+            }, { passive: true });
         });
     }
 
