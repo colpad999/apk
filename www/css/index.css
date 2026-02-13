@@ -30,15 +30,8 @@
 }
 
 /* Fix for Android input zoom */
-input, textarea, select {
-    font-size: 16px !important; /* Prevent zoom on focus */
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-}
-
-/* Fix for Android viewport */
 html {
+    font-size: 16px !important;
     height: 100%;
     width: 100%;
     overflow: hidden;
@@ -47,6 +40,14 @@ html {
     text-size-adjust: 100%;
 }
 
+input, textarea, select {
+    font-size: 16px !important; /* Prevent zoom on focus */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* Fix for Android viewport */
 body {
     position: fixed;
     width: 100%;
@@ -252,6 +253,9 @@ body {
     background: var(--accent-cyan);
     opacity: 0.1;
     animation: float 20s infinite linear;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
 @keyframes float {
@@ -259,6 +263,20 @@ body {
     25% { transform: translate(100px, 50px) rotate(90deg); }
     50% { transform: translate(50px, 100px) rotate(180deg); }
     75% { transform: translate(-50px, 50px) rotate(270deg); }
+}
+
+/* Disable heavy animations on low-end / reduced motion */
+@media (prefers-reduced-motion) {
+    .grid-bg,
+    .floating-element,
+    .orbit,
+    .status-dot,
+    .loading-dot {
+        animation: none !important;
+    }
+    .grid-bg {
+        background-size: 80px 80px; /* static grid */
+    }
 }
 
 /* === LOGIN SCREEN === */
@@ -556,6 +574,7 @@ body {
     padding-bottom: calc(var(--nav-height) + var(--space-lg) + var(--safe-area-bottom));
     display: none;
     width: 100%;
+    transition: padding-bottom 0.3s ease;
 }
 
 .content-area.active {
@@ -1058,15 +1077,15 @@ body {
 }
 
 .action-btn {
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.5rem;
     transition: all var(--transition-fast);
     background: rgba(255, 71, 87, 0.1);
     color: var(--accent-red);
@@ -1100,6 +1119,7 @@ body {
     margin-bottom: var(--space-xxl);
     backdrop-filter: blur(10px);
     -webkit-tap-highlight-color: transparent;
+    min-height: 56px;
 }
 
 .add-habit-btn:active {
@@ -1206,6 +1226,7 @@ body {
     border: 1px solid transparent;
     -webkit-tap-highlight-color: transparent;
     flex-shrink: 0;
+    min-height: 44px;
 }
 
 .user-profile:active {
@@ -1308,8 +1329,8 @@ body {
 }
 
 .modal-close {
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
@@ -1317,7 +1338,7 @@ body {
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
     color: var(--text-secondary);
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     cursor: pointer;
     transition: all var(--transition-fast);
     -webkit-tap-highlight-color: transparent;
@@ -1367,11 +1388,12 @@ body {
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: 16px !important;
     transition: all var(--transition-fast);
     font-family: var(--font-sans);
     -webkit-appearance: none;
     appearance: none;
+    min-height: 56px;
 }
 
 .form-input:focus {
@@ -1406,6 +1428,7 @@ select.form-input {
     -webkit-tap-highlight-color: transparent;
     text-decoration: none;
     width: 100%;
+    min-height: 56px;
 }
 
 .btn-full {
@@ -1467,6 +1490,12 @@ select.form-input {
     background: linear-gradient(to top, var(--accent-cyan), var(--accent-blue));
     border-radius: 4px 4px 0 0;
     transition: height 1s ease;
+}
+
+/* === TOUCH FEEDBACK === */
+.touch-active {
+    opacity: 0.8;
+    transform: scale(0.98);
 }
 
 /* === SCROLLBAR STYLING === */
